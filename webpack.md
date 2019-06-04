@@ -1,3 +1,5 @@
+
+
 # webpack
 
 [![img](https://img.shields.io/npm/v/webpack.svg?label=webpack&style=flat-square&maxAge=3600)](https://github.com/webpack/webpack/releases)
@@ -9,8 +11,8 @@ npm install moduleName # 安装模块到项目目录下
 npm install -g moduleName # -g 的意思是将模块安装到全局，具体安装到磁盘哪个位置，要看 npm config prefix 的位置。
 npm install --save moduleName # --save 的意思是将模块安装到项目目录下，并在package文件的dependencies节点写入依赖。
 npm install --save-dev moduleName # --save-dev 的意思是将模块安装到项目目录下，并在package文件的devDependencies节点写入依赖。
-//-S就是--save
-//-D就是--save-dev
+//-S就是--save      //开发
+//-D就是--save-dev  //测试
 //-O就是--save-optional
 //-E就是--save-exact
 //-B就是--save-bundle
@@ -25,10 +27,96 @@ npm install --global webpack
 npm install --save-dev webpack-cli
 ```
 
-## 起步
+## [起步](https://www.webpackjs.com/guides/getting-started/)
 
 ```shell
 mkdir webpack-demo && cd webpack-demo
 npm init -y
 npm install webpack webpack-cli --save-dev
 ```
+
+### **project**
+
+```diff
+  webpack-demo
+  |- package.json
++ |- index.html
++ |- /src
++   |- index.js
+```
+
+### **src/index.js**
+
+```javascript
+function component() {
+  var element = document.createElement('div');
+
+  // Lodash（目前通过一个 script 脚本引入）对于执行这一行是必需的
+  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+
+  return element;
+}
+
+document.body.appendChild(component());
+```
+
+### **index.html**
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <title>起步</title>
+    <script src="https://unpkg.com/lodash@4.16.6"></script>
+  </head>
+  <body>
+    <script src="./src/index.js"></script>
+  </body>
+</html>
+```
+
+### **package.json**
+
+```diff
++   "private": true,
+-   "main": "index.js",
+```
+
+### 创建一个 bundle 文件
+
+#### **project**
+
+```diff
++ |- /dist
++   |- index.html
+- |- index.html
+```
+
+要在 `index.js` 中打包 `lodash` 依赖，我们需要在本地安装 library：
+
+```bash
+npm install --save lodash
+```
+
+#### **src/index.js**
+
+```diff
++ import _ from 'lodash';
+-   // Lodash, currently included via a script, is required for this line to work
++   // Lodash, now imported by this script
+```
+
+#### **dist/index.html**
+
+```diff
+-    <script src="https://unpkg.com/lodash@4.16.6"></script>
+-    <script src="./src/index.js"></script>
++    <script src="main.js"></script>
+```
+
+#### 执行
+
+```shell
+npx webpack
+```
+
