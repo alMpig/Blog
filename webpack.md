@@ -120,3 +120,213 @@ npm install --save lodash
 npx webpack
 ```
 
+在浏览器中打开 `index.html`，如果一切访问都正常，你应该能看到以下文本：'Hello webpack'。
+
+### 模块
+
+ [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) 和 [`export`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+#### 使用一个配置文件
+
+#### **project**
+
+```diff
++ |- webpack.config.js
+```
+
+#### **webpack.config.js**
+
+```javascript
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+};
+```
+
+#### **dist/index.html**
+
+```diff
+-    <script src="main.js"></script>
++    <script src="bundle.js"></script>
+```
+
+```shell
+//执行
+npx webpack --config webpack.config.js
+```
+
+### NPM 脚本(NPM Scripts)
+
+考虑到用 CLI 这种方式来运行本地的 webpack 不是特别方便，我们可以设置一个快捷方式。在 *package.json* 添加一个 [npm 脚本(npm script)](https://docs.npmjs.com/misc/scripts)：
+
+#### **package.json**
+
+```diff
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
++     "build": "webpack"
+    },
+```
+
+现在，可以使用 `npm run build` 命令，来替代我们之前使用的 `npx` 命令。注意，使用 npm 的 `scripts`，我们可以像使用 `npx` 那样通过模块名引用本地安装的 npm 包。这是大多数基于 npm 的项目遵循的标准，因为它允许所有贡献者使用同一组通用脚本（如果必要，每个 flag 都带有 `--config` 标志）。
+
+## 管理资源
+
+### 加载 CSS
+
+```bash
+npm install --save-dev style-loader css-loader
+```
+
+为了从 JavaScript 模块中 `import` 一个 CSS 文件，你需要在 [`module` 配置中](https://www.webpackjs.com/configuration/module) 安装并添加 [style-loader](https://www.webpackjs.com/loaders/style-loader) 和 [css-loader](https://www.webpackjs.com/loaders/css-loader)：
+
+#### **webpack.config.js**
+
+```diff
+ module.exports = {
+  	output: {
+    },
++   module: {
++     rules: [
++       {
++         test: /\.css$/,
++         use: [
++           'style-loader',
++           'css-loader'
++         ]
++       }
++     ]
++   }
+};
+```
+
+#### **project**
+
+```diff
+  |- /src
++   |- style.css
+```
+
+#### **src/style.css**
+
+```css
+.hello {
+  color: red;
+}
+```
+
+#### **src/index.js**
+
+```diff
++ import './style.css';
++   element.classList.add('hello');
+```
+
+```bash
+npm run build
+```
+
+### 加载图片
+
+```bash
+npm install --save-dev file-loader
+```
+
+#### **webpack.config.js**
+
+```diff
+    module: {
+      rules: [
++       {
++         test: /\.(png|svg|jpg|gif)$/,
++         use: [
++           'file-loader'
++         ]
++       }
+ 	]
+}    
+```
+
+#### **project**
+
+```diff
+  |- /src
++   |- icon.png
+```
+
+#### **src/index.js**
+
+```diff
++ import Icon from './icon.png';
++   // 将图像添加到我们现有的 div。
++   var myIcon = new Image();
++   myIcon.src = Icon;
++
++   element.appendChild(myIcon);
+```
+
+#### **src/style.css**
+
+```diff
+  .hello {
+    color: red;
++   background: url('./icon.png');
+  }
+```
+
+```bash
+npm run build
+```
+
+### 加载字体
+
+#### **webpack.config.js**
+
+```diff
+    module: {
+      rules: [
++       {
++         test: /\.(woff|woff2|eot|ttf|otf)$/,
++         use: [
++           'file-loader'
++         ]
++       }
+ 	]
+} 
+```
+
+#### **project**
+
+```diff
+  |- /src
++   |- my-font.woff
++   |- my-font.woff2
+```
+
+#### **src/style.css**
+
+[字体格式](<http://www.mamicode.com/info-detail-627082.html>)|[字体下载](<http://font.chinaz.com/tag_font/WangYe.html>)
+
+```diff
++ @font-face {
++   font-family: 'MyFont';
++   src:  url('Lazara.ttf') format('truetype');
++   font-weight: 600;
++   font-style: normal;
++ }
+
+  .hello {
+    color: red;
++   font-family: 'MyFont';
+    background: url('./icon.png');
+  }
+```
+
+```bash
+npm run build
+```
