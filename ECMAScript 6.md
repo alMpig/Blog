@@ -167,10 +167,122 @@ const tom = {
     age:18,
     fun(){}, //方法的简写
     [keys.shift()]:vals.shift(),
-    [`'user-'${++id}`]:id,
+    [`'user-'${++id}`]:id,//可递增id
     [`'user-'${++id}`]:id
 }
 ```
 
-# [进度](<https://www.bilibili.com/video/av47304735/?p=26>)
+## Promise
 
+```javascript
+function getData(sum){
+    return new Promise(reslove,reject => {
+        setTimeout(() => {
+            if(sum){
+               reslove('ok!')
+            }else{
+               reject(Error('no'))
+            }
+        },2000)
+    })
+}
+getData(1)
+.then(data => { console.log(data) })
+.catch(err => { console.log(err) })
+Promise.all([Promise,Promise])//所有都成功才返回成功
+//Promise.race([Promise,Promise])根据第一个返回的来判定是成功还是失败
+.then(data => { console.log(data) })
+.catch(err => { console.log(err) })
+```
+
+## Symbol
+
+> 第7种数据类型  | 用于生成唯一的标识符 \ 避免命名冲突
+
+```javascript
+const claRoom = {
+    [symbol('lily')]:{age:18,gender:0},
+    [symbol('nina')]:{age:22,gender:1},
+    [symbol('nina')]:{age:30,gender:0}
+}
+const syms = Object.getOwnPropertySymbols(claRoom).map(sym => claRoom[sym])
+console.log(syms)
+```
+
+## [ESLint](<http://eslint.cn/>)
+
+>  ESLint 是一个ECMAScript/JavaScript 语法规则和代码风格的检查工具，它的目标是保证代码的一致性和避免错误。
+
+* [airbnb](<https://github.com/airbnb/javascript>)  一种规则
+
+## 模块
+
+* import   导入
+* export   导出
+
+## class类
+
+### 基本方法
+
+```javascript
+let metFun = 'infos';//可以用计算属性的方式定义函数名
+//只能用new关键字来调用
+//cost lesUser = new User()
+//lesUser.infos()
+class User {
+    constructor(name, email) {
+        this.name  = name;
+        this.email = email;
+    }
+  	info(){
+        console.log('这是一个原型上的方法')
+    }
+    [metFun](){
+        //User.infos()
+        console.log('这是一个原型上的方法')
+    }
+    static description() {
+        console.log('这是一个User的私有方法') //只能:User.description()
+    }
+    //在“类”的内部可以使用get和set关键字，对某个属性设置存值函数和取值函数，拦截该属性的存取行为。
+    set prop(val){
+        this.valus  = val
+        //User.prop = 'abc123';//abc123
+    }
+    get prop(){
+        return this.valus
+        //inst.prop ;//abc123
+    }
+}
+```
+
+### 类的继承
+
+```javascript
+class Doc extends User {
+  constructor(name,age) {
+    super(name);
+    this.age = age
+  }
+  //可以定义Doc自己的方法
+}
+const leuck = new Doc('leuck',88)
+```
+
+### 扩展内建对象
+
+```javascript
+class arrTo extends Array {
+  constructor() {
+    super();
+  }
+}
+const leuck = new arrTo()
+//可继承Array所有的方法
+leuck.push('0');//['0']
+```
+
+# 进度
+
+* 模块需要重新看
+* [Iterator](<https://www.bilibili.com/video/av47304735/?p=45>)
