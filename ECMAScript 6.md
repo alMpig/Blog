@@ -220,6 +220,40 @@ console.log(syms)
 * import   导入
 * export   导出
 
+```javascript
+//默认导出
+const apikey = 'abc123' //config.js
+export default apikey//只能有一个默认导出
+//导入
+import abc form './config'//可以使用任意的名字导出  
+------------------------------------------------------------
+//命名导出
+export const apikey = 'abc123' //config.js  //可以导出很多个
+export const abc = 'abc123'
+import { apikey,abc } form './config' //只能用导出的名字来接收,要用大括号了包住只有一个也是一样的
+------------------------------------------------------------
+//导出函数
+export function greet(name){
+    console.log(`hello  ${name}`)
+}
+import { greet } form './config'
+------------------------------------------------------------
+//导出多个
+export { apikey as key,abc,greet } //as重命名导出的变量
+import { key, abc as a ,greet } //导入的时候也要用改过的名字接受 , 引入也是可以改名字
+console.log(a)
+------------------------------------------------------------
+//默认导出,命名导出可以同时使用
+const apikey = 'abc123' //config.js
+export default apikey//只能有一个默认导出
+export const abc = 'abc123'
+export function greet(name){
+    console.log(`hello  ${name}`)
+}
+//接收
+import apikey , { abc, greet } form './config'
+```
+
 ## class类
 
 ### 基本方法
@@ -282,7 +316,3 @@ const leuck = new arrTo()
 leuck.push('0');//['0']
 ```
 
-# 进度
-
-* 模块需要重新看
-* [Iterator](<https://www.bilibili.com/video/av47304735/?p=45>)
