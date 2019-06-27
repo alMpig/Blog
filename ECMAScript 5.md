@@ -1,14 +1,66 @@
 
 
-# 严格模式
+# JavaScript 实现
+
+> 一个完整的 JavaScript 实现应该由下列
+
+* 核心(ECMAScript)
+* 文档对象模型(DOM)
+* 浏览器对象模型(BOM) 
+
+# 在HTML中使用JavaScript
+
+* 延迟脚本（**defer="defer"**）
+* 异步脚本（**async**）
 
 ```javascript
-'use strict'; // 开启严格模式
+//属性只适用于外部脚本文件 [defer,async]
+//在<script>元素中设置 defer 属性，相当于告诉浏览器立即下载，但延迟执行。
+//并告诉浏览器立即下载文件。但与defer不同的是，标记为 async 的脚本并不保证按照指定它们的先后顺序执行
 ```
 
-# switch判断
+# 基本概念
 
+> 语法
+
+* 区分大小写（变量名 test 和变量名 Test 分别表示两个不同的变量）
+* 标识符（第一个字符必须是一个字母、下划线(_)或一个美元符号($)，其他字符可以是字母、下划线、美元符号或数字）
+* 严格模式（'use strict'; // 开启严格模式）
+* 数据类型
+  * 5 种简单数据类型：也称为基本数据类型:Undefined、Null、Boolean、Number和 String。
+  * 1 种复杂数据类型：Object
+* **typeof（通过 **typeof** 操作符来区分函数和其他对象）
+  * "undefined"——如果这个值未定义;
+  * boolean"——如果这个值是布尔值;
+  * "string"——如果这个值是字符串;
+  * "number"——如果这个值是数值;
+  * "object"——如果这个值是对象或 null;
+  * "function"——如果这个值是函数
+
+```javascript
+//对一个值使用 typeof 操作符可能返回下列某个字符串:
+//注意， typeof 是一个操作符而不是函数
+var message = "some string";
+alert(typeof message); // "string"
+alert(typeof 95); // "number"
+//typeof null 会返回"object"，因为特殊值 null 被认为是一个空的对象引用
 ```
+
+* 数值转换（Number()、parseInt()和 parseFloat()）
+
+## 三元运算符
+
+```javascript
+//(条件) ? 表达式1 : 表达式2
+var bolu = ( a === b) ? 'ok':'no'
+		//当a等于b的时候返回ok，不等的是否返回no
+```
+
+## 语句
+
+### switch判断
+
+```javascript
 switch (x) {
   case 1:
     console.log('x 等于1');
@@ -21,17 +73,9 @@ switch (x) {
 }
 ```
 
-# 三元运算符
 
-```javascript
-//(条件) ? 表达式1 : 表达式2
-var bolu = ( a === b) ? 'ok':'no'
-		//当a等于b的时候返回ok，不等的是否返回no
-```
 
-# 循环
-
-## while 循环
+### while 循环
 
 `While`语句包括一个循环条件和一段代码块，只要条件为真，就不断循环执行代码块。
 
@@ -58,11 +102,11 @@ do {
 } while (条件);
 ```
 
-## break 语句和 continue 语句
+### break 语句和 continue 语句
 
 如果存在多重循环，不带参数的`break`语句和`continue`语句都只针对最内层循环。
 
-### break
+#### break
 
 ```javascript
 //break语句用于跳出代码块或循环。
@@ -80,7 +124,7 @@ while(i < 100) {
 }
 ```
 
-### continue
+#### continue
 
 ```javascript
 //continue语句用于立即终止本轮循环，返回循环结构的头部，开始下一轮循环。
@@ -93,7 +137,7 @@ while (i < 100){
 }
 ```
 
-# 标签（label）
+### 标签（label）
 
 JavaScript 语言允许，语句的前面有标签（label），相当于定位符，用于跳转到程序的任意位置，标签的格式如下。
 
@@ -113,7 +157,7 @@ top:
 
 ```
 
-## 标签也可以用于跳出代码块。
+### 标签也可以用于跳出代码块。
 
 ```javascript
 foo: {
@@ -126,7 +170,7 @@ console.log(2);
 // 2
 ```
 
-## `continue`语句也可以与标签配合使用。
+### `continue`语句也可以与标签配合使用。
 
 ```javascript
 top:
@@ -843,7 +887,31 @@ console.groupEnd();
 
 `console.clear`方法用于清除当前控制台的所有输出，将光标回置到第一行。如果用户选中了控制台的“Preserve log”选项，`console.clear`方法将不起作用。
 
+# Object 对象
 
+## Object 的静态方法
+
+* Object.keys(obj) （只返回可枚举的属性）
+* Object.getOwnPropertyNames(obj) （还返回不可枚举的属性名）
+
+```javascript
+//Object.keys方法和Object.getOwnPropertyNames方法都用来遍历对象的属性。
+//Object.keys方法的参数是一个对象，返回一个数组。该数组的成员都是该对象自身的（而不是继承的）所有属性名。
+//Object.getOwnPropertyNames方法与Object.keys类似，也是接受一个对象作为参数，返回一个数组，包含了该对象自身的所有属性名。
+```
+
+## Object 的实例方法
+
+> 除了静态方法，还有不少方法定义在`Object.prototype`对象。它们称为实例方法，所有`Object`的实例对象都继承了这些方法。
+
+`Object`实例对象的方法，主要有以下六个。
+
+- `Object.prototype.valueOf()`：返回当前对象对应的值。
+- `Object.prototype.toString()`：返回当前对象对应的字符串形式。(可以看出一个值到底是什么类型)
+- `Object.prototype.toLocaleString()`：返回当前对象对应的本地字符串形式。
+- `Object.prototype.hasOwnProperty()`：判断某个属性是否为当前对象自身的属性，还是继承自原型对象的属性。
+- `Object.prototype.isPrototypeOf()`：判断当前对象是否为另一个对象的原型。
+- `Object.prototype.propertyIsEnumerable()`：判断某个属性是否可枚举。
 
 # 正则表达式
 

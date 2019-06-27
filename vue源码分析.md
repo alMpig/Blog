@@ -105,5 +105,92 @@ ul.appendChild(fragment)
 
 ## 数据代理
 
-> 通过一个对象代理对另一个对象(在前一个对象内部)中属性的操作(读/写) 
+1. 数据代理: 通过一个对象代理对另一个对象(在前一个对象内部)中属性的操作(读/写) 
+2. vue 数据代理: 通过 vm 对象来代理 data 对象中所有属性的操作 
+3. 好处: 更方便的操作 data 中的数据 
+4. 基本实现流程 
+   1. 通过 Object.defineProperty()给 vm 添加与 data 对象的属性对应的属性描述符 
+   2. 所有添加的属性都包含 getter/setter 
+   3. getter/setter 内部去操作 data 中对应的属性数据 
+
+```javascript
+//相当于Vue的构造函数
+function MVVM(options) {
+    //将配置对象保存到vm
+    this.$options = options || {};
+  	//将data对象保存到变量vm和变量data中
+    var data = this._data = this.$options.data;
+    //保存vm到变量me
+    var me = this;
+    //遍历data中所有的属性
+    Object.keys(data).forEach(function(key) { //key是data中的某一个属性名
+        //对指定的的属性实现代理
+        me._proxyData(key);
+    });
+}
+MVVM.prototype = {
+  //实现指定属性代理的方法  vm.xxx -> vm._data.xxx
+  _proxyData: function(key) {
+    		//保存vm到变量me
+        var me = this;
+    	  Object.defineProperty(me, key, {
+            configurable: false,//不能重新定义
+            enumerable: true,//可以枚举遍历
+          	//当通过vm.xxx读取属性值的时候调用，从data中获取相应的属性值返回。代理读操作
+            get: function proxyGetter() {
+                return me._data[key];
+            },
+          	//当通过vm.xxx = value时，value被保存到data中对应的属性上。代理写操作
+            set: function proxySetter(newVal) {
+                me._data[key] = newVal;
+            }
+        });
+  }
+}
+var vm = new MVVM({
+    data: {
+      someStr: 'hello '
+    }
+})
+```
+
+## 模版解析
+
+### 模板解析的基本流程
+
+1. 将 el 的所有子节点取出, 添加到一个新建的文档 fragment 对象中 
+2. 对 fragment 中的所有层次子节点递归进行编译解析处理 
+   * 对大括号表达式文本节点进行解析 
+   *  对元素节点的指令属性进行解析 
+     * 事件指令解析 
+     * 一般指令解析 
+3. 将解析后的 fragment 添加到 el 中显示
+
+### 模板解析**(1):** 大括号表达式解析 
+
+1. 根据正则对象得到匹配出的表达式字符串: 子匹配/RegExp.$1 name 
+2. 从 data 中取出表达式对应的属性值 
+3. 将属性值设置为文本节点的 textContent 
+
+### **模板解析**(2): 事件指令解析 
+
+1. 从指令名中取出事件名 
+2. 根据指令的值(表达式)从 methods 中得到对应的事件处理函数对象 
+3. 给当前元素节点绑定指定事件名和回调函数的 dom 事件监听 
+4. 指令解析完后, 移除此指令属性 
+
+### **模板解析**(3): 一般指令解析 
+
+1. 得到指令名和指令值(表达式) text/html/class msg/myClass 
+2. 从 data 中根据表达式得到对应的值 
+3. 根据指令名确定需要操作元素节点的什么属性 
+   * v-text---textContent 属性
+   * v-html---innerHTML 属性
+   * v-class--className 属性 
+4. 将得到的表达式的值设置到对应的属性上 
+5. 移除元素的指令属性 
+
+```javascript
+进度：https://www.bilibili.com/video/av49099807/?p=54
+```
 
