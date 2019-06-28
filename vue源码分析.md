@@ -190,7 +190,20 @@ var vm = new MVVM({
 4. 将得到的表达式的值设置到对应的属性上 
 5. 移除元素的指令属性 
 
+## 数据绑定
+
+> 一旦更新了 data 中的某个属性数据, 所有界面上直接使用或间接使用了此属性的节点都会
+> 更新
+
+### 数据劫持 
+
+1. 数据劫持是 vue 中用来实现数据绑定的一种技术 
+
+2. 基本思想: 通过 defineProperty()来监视 data 中所有属性(任意层次)数据的变化, 一旦变 
+
+   化就去更新界面 
+
 ```javascript
-进度：https://www.bilibili.com/video/av49099807/?p=54
+进度：https://www.bilibili.com/video/av49099807/?p=58
 ```
 
