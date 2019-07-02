@@ -203,7 +203,91 @@ var vm = new MVVM({
 
    化就去更新界面 
 
-```javascript
-进度：https://www.bilibili.com/video/av49099807/?p=58
-```
+### 四个重要对象
 
+#### Observer 
+
+1. 用来对 data 所有属性数据进行劫持的构造函数 
+2. 给 data 中所有属性重新定义属性描述(get/set) 
+3. 为 data 中的每个属性创建对应的 dep 对象 
+
+#### Dep(Depend) 
+
+1. data 中的每个属性(所有层次)都对应一个 dep 对象 
+
+2. 创建的时机:
+
+   * 在初始化 define data 中各个属性时创建对应的 dep 对象 
+   * 在 data 中的某个属性值被设置为新的对象时 
+
+3. 对象的结构 
+
+   {
+    id, // 每个 dep 都有一个唯一的 id
+    subs //包含 n 个对应 watcher 的数组(subscribes 的简写) 
+
+   } 
+
+4. subs 属性说明 
+
+   * 当 watcher 被创建时, 内部将当前 watcher 对象添加到对应的 dep 对象的 subs 中 
+   * 当此 data 属性的值发生改变时, subs 中所有的 watcher 都会收到更新的通知, 从而最终更新对应的界面
+
+#### Compiler 
+
+1. 用来解析模板页面的对象的构造函数(一个实例) 
+
+2. 利用 compile 对象解析模板页面 
+
+3. 每解析一个表达式(非事件指令)都会创建一个对应的 watcher 对象, 
+
+   与 dep 的关系 
+
+4. complie 与 watcher 关系: 一对多的关系 
+
+#### Watcher 
+
+1. 模板中每个非事件指令或表达式都对应一个 watcher 对象 
+
+2. 监视当前表达式数据的变化 
+
+3. 创建的时机: 在初始化编译模板时 
+
+4. 对象的组成 { 
+
+   vm, //vm 对象
+    exp, //对应指令的表达式
+    cb, //当表达式所对应的数据发生改变的回调函数
+    value, //表达式当前的值
+    depIds //表达式中各级属性所对应的 dep 对象的集合对象 
+
+   //属性名为 dep 的 id, 属性值为 dep 
+
+   } 
+
+5. 总结: dep 与 watcher 的关系: 多对多 
+
+   1. data 中的一个属性对应一个 dep, 一个 dep 中可能包含多个 watcher(模板中有几个 
+
+      表达式使用到了同一个属性) 
+
+   2. 模板中一个非事件表达式对应一个 watcher, 一个 watcher 中可能包含多个 dep(表 
+
+      达式是多层: a.b) 
+
+   3. 数据绑定使用到 2 个核心技术 
+
+      \* defineProperty() * 消息订阅与发布 
+
+## **MVVM** 原理图分析
+
+![image-20190702154114357](/Users/page/Library/Application Support/typora-user-images/image-20190702154114357.png)
+
+### 双向数据绑定
+
+1. 双向数据绑定是建立在单向数据绑定(model==>View)的基础之上的 
+
+2. 双向数据绑定的实现流程:
+   a. 在解析v-model指令时,给当前元素添加input监听 
+
+   b. 当 input 的 value 发生改变时, 将最新的值赋值给当前表达式所对应的 data 属性 
