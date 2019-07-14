@@ -291,3 +291,13 @@ var vm = new MVVM({
    a. 在解析v-model指令时,给当前元素添加input监听 
 
    b. 当 input 的 value 发生改变时, 将最新的值赋值给当前表达式所对应的 data 属性 
+
+# Vue.js 深入浅出
+
+> vue.js 是渐进式框架
+
+## 变化侦测
+
+### object的变化侦测
+
+Object.define
