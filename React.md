@@ -16,10 +16,9 @@
 * `npm install -g create-react-app`
 
 ```javascript
-1. mkdir ReactDemo  //创建ReactDemo文件夹
-2. create-react-app demo   //用脚手架创建React项目
-3. cd demo   //等创建完成后，进入项目目录
-4. npm start   //预览项目，如果能正常打开，说明项目创建成功
+1. create-react-app react-demo   //用脚手架创建React项目
+2. cd react-dom   //等创建完成后，进入项目目录
+3. npm start   //预览项目，如果能正常打开，说明项目创建成功
 ```
 
 ## 项目根目录
@@ -69,33 +68,59 @@
 - **app.js** : 这个文件相当于一个方法模块，也是一个简单的模块化编程。
 - **serviceWorker.js**: 这个是用于写移动端开发的，PWA必须用到这个文件，有了这个文件，就相当于有了离线浏览的功能。
 
-## HelloWorld和组件
+# React生命周期图
 
-在`src目录`下，新建一个文件`index.js`
+![React声明周期图](https://jspang.com/images/React1901.png)
 
-```javascript
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
-ReactDOM.render(<App />,document.getElementById('root'))
-```
+通过这张图你可以看到React生命周期的四个大阶段：
 
-在`src目录`下，新建一个文件`App.js`
+1. `Initialization`:初始化阶段。
+2. `Mounting`: 挂在阶段。
+3. `Updation`: 更新阶段。
+4. `Unmounting`: 销毁阶段
 
-```javascript
-import React, {Component} from 'react'
-class App extends Component{
-    render(){
-        return (
-            <div>
-                Hello JSPang
-            </div>
-        )
-    }
-}
-export default App;
-```
+## 什么是生命周期函数
 
-## React中JSX语法
+> 生命周期函数指在某一个时刻组件会自动调用执行的函数
 
-> JSX就是Javascript和XML结合的一种格式。React发明了JSX，可以方便的利用HTML语法来创建虚拟DOM，当遇到`<`，JSX就当作HTML解析，遇到`{`就当JavaScript解析.
+举例：写的小姐姐的例子。里边的`render()`函数，就是一个生命周期函数，它在state发生改变时自动执行。这就是一个标准的自动执行函数。
+
+- `constructor`不算生命周期函数。
+
+`constructor`我们叫构造函数，它是ES6的基本语法。虽然它和生命周期函数的性质一样，但不能认为是生命周期函数。
+
+但是你要心里把它当成一个生命周期函数，我个人把它看成React的`Initialization`阶段，定义属性（props）和状态(state)。
+
+## Mounting阶段
+
+Mounting阶段叫挂载阶段，伴随着整个虚拟DOM的生成，它里边有三个小的生命周期函数，分别是：
+
+1. `componentWillMount` : 在组件即将被挂载到页面的时刻执行。
+2. `render` : 页面state或props发生变化时执行。
+3. `componentDidMount` : 组件挂载完成时被执行。
+
+## **注意的问题**
+
+`componentWillMount`和`componentDidMount`这两个生命周期函数，只在页面刷新时执行一次，而`render`函数是只要有state和props变化就会执行，这个初学者一定要注意。
+
+## `Updation`阶段
+
+`shouldComponentUpdate`函数会在组件更新之前，自动被执行。
+
+`componentWillUpdate`在组件更新之前，但`shouldComponenUpdate`之后被执行。但是如果`shouldComponentUpdate`返回false，这个函数就不会被执行了。
+
+`componentDidUpdate`在组件更新之后执行，它是组件更新的最后一个环节。
+
+`componentWillReceiveProps`子组件接收到父组件传递过来的参数，父组件render函数重新被执行，这个生命周期就会被执行。
+
+- 也就是说这个组件第一次存在于Dom中，函数是不会被执行的;
+- 如果已经存在于Dom中，函数才会被执行。
+
+`componentWillUnmount`这个函数时组件从页面中删除的时候执行
+
+# axios请求数据
+
+强烈建议在`componentDidMount`函数里作`ajax`请求。
+
+# react-transition-group动画组件
+
