@@ -68,7 +68,7 @@
 - **app.js** : 这个文件相当于一个方法模块，也是一个简单的模块化编程。
 - **serviceWorker.js**: 这个是用于写移动端开发的，PWA必须用到这个文件，有了这个文件，就相当于有了离线浏览的功能。
 
-# React生命周期图
+## React生命周期图
 
 ![React声明周期图](https://jspang.com/images/React1901.png)
 
@@ -118,9 +118,35 @@ Mounting阶段叫挂载阶段，伴随着整个虚拟DOM的生成，它里边有
 
 `componentWillUnmount`这个函数时组件从页面中删除的时候执行
 
-# axios请求数据
+## axios请求数据
 
 强烈建议在`componentDidMount`函数里作`ajax`请求。
 
-# react-transition-group动画组件
+## react-transition-group动画组件
 
+# Redux
+
+> `antd` 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。
+
+```sh
+npm install --save redux
+```
+
+安装好`redux`之后，在`src`目录下创建一个`store`文件夹,然后在文件夹下创建一个`index.js`文件。
+
+`index.js`就是整个项目的`store`文件，打开文件，编写下面的代码。
+
+```js
+import { createStore } from 'redux'  // 引入createStore方法
+const store = createStore()          // 创建数据存储仓库
+export default store                 //暴露出去
+```
+
+这样虽然已经建立好了仓库，但是这个仓库很混乱，这时候就需要一个有管理能力的模块出现，这就是`Reducers`。这两个一定要一起创建出来，这样仓库才不会出现互怼现象。在`store`文件夹下，新建一个文件`reducer.js`,然后写入下面的代码。
+
+```js
+const defaultState = {}  //默认数据
+export default (state = defaultState,action)=>{  //就是一个方法函数
+    return state
+}
+```
